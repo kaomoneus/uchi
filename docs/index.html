@@ -1,5 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="qrcode.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Single source of truth — change it here only.
+    const USDT_ADDRESS = "TBPxoWdeW793D5yNe8kteM75dUt3aGNq26";
+
+    const qrContainer = document.getElementById("usdt-qr");
+    const addrEl = document.getElementById("usdt-addr");
+    const copyBtn = document.getElementById("usdt-copy");
+
+    if (!qrContainer || !addrEl || !copyBtn) {
+      console.error("USDT donation elements not found");
+      return;
+    }
+
+    // Fill the visible address text from the constant
+    addrEl.textContent = USDT_ADDRESS;
+
+    // QR code from the same constant
+    new QRCode(qrContainer, {
+      text: USDT_ADDRESS,
+      width: 120,
+      height: 120,
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    // Copy button uses the same constant
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(USDT_ADDRESS);
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => (copyBtn.textContent = "Copy address"), 1500);
+      } catch (e) {
+        alert("Copy failed — please select the address manually.");
+      }
+    });
+  });
+</script>  
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,8 +55,12 @@
     .support { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; }
     .support-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6a6a80; margin-bottom: 0.4rem; }
     .contact-name { font-weight: 600; color: #c8c8e0; margin-bottom: 0.2rem; }
-    a.mail, a.github { color: #f8b4c8; text-decoration: underline; text-underline-offset: 2px; }
-    a.mail:hover, a.github:hover { color: #ffb9cc; }
+    .donate { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; max-width:420px; margin:0 auto;}
+    .donate-title { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.1em; color: #cc64f8; margin-bottom: 0.4rem; }
+    .donate-usdt { border: 1px solid rgba(255, 255, 255, 0.703); border-radius: 8px; padding: 1.5rem; max-width:300px; margin:0 auto;}
+    .donate-usdt-title { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.1em; color: #ffffff; margin-bottom: 0.4rem; }
+    a.mail, a.github, a.boosty { color: #f8b4c8; text-decoration: underline; text-underline-offset: 2px; }
+    a.mail:hover, a.github:hover, a.boosty:hover { color: #ffb9cc; }
   </style>
 </head>
 <body>
@@ -266,6 +308,30 @@
   <a href="https://github.com/kaomoneus/uchi/issues" target="_blank" rel="noopener" class="github">Report issues on GitHub</a>
   <a href="https://apps.apple.com/us/app/uchi/id6781177707" target="_blank" rel="noopener" style="display:block; text-align:center; margin-top:2rem;"><img src="Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg" style="width:25%"/></a>
   <a href="https://play.google.com/store/apps/details?id=com.dyatkovskiy.uchi&pcampaignid=web_share" target="_blank" rel="noopener" style="display:block; text-align:center; margin-top:10px;"><img src="GetItOnGooglePlay_Badge_Web_color_English.svg" style="width:25%"/></a>
+  <br/>
 </div>
+<div class="donate">
+  <p class="donate-title">Donate</p>
+  <a href="https://boosty.to/kaomoneus/single-payment/donation/844623/target?share=target_link" target="_blank" rel="noopener" class="boosty"><img src="BoostyWhite.svg" style="width:25%"/></a>
+  <div class="donate-usdt">
+    <p class="donate-usdt-title">USDT</h3>
+    <p style="margin:4px 0; font-size:12px; color:rgb(204, 75, 0); font-weight:bold;">Network: TRC20 (Tron) only</p>
+    <p style="margin:4px 0; font-size:10px; color:#666;">
+      Sending via any other network (ERC20, BEP20, etc.) will result in lost funds.
+    </p>
+    <div style="display:flex; align-items:center; gap:12px; margin-top:12px;">
+      <div id="usdt-qr"></div>
+      <div style="flex:1;">
+        <code id="usdt-addr" style="display:block; word-break:break-all; font-size:13px; padding:8px; border-radius:4px;">
+          <!-- Will be filled by script -->
+        </code>
+        <button id="usdt-copy" style="margin-top:8px; padding:6px 12px; cursor:pointer;">
+          Copy address
+        </button>
+      </div>
+    </div>
+  </div>
+</div>  
+
 </body>
 </html>
